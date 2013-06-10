@@ -1,0 +1,7 @@
+*.jar
+*.zip
+lib/**
+FitNesseRoot/**
+FitNesse-RESTPlugin/target/**
+FitNesse-RESTPlugin/bin/**
+FitNesse-RESTPlugin/?/**
