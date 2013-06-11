@@ -26,12 +26,12 @@ public class RestPlugin {
 	private String method, output = "";
 	private String url, header = "";
 	private Config config;
-	private List<Data> headers = new ArrayList<Data>();
 
 	/**
 	 * Constructors
 	 */
 	public RestPlugin() {
+		url = "";
 		config = Config.getConfig(Config.DEFAULT_CONFIG_NAME);
 	}
 
@@ -52,7 +52,7 @@ public class RestPlugin {
 	}
 
 	public void header(String h) {
-		headers.add(new Data(h.split(":")[0].trim(), h.split(":")[1].trim()));
+		config.add(h.split(":")[0].trim(), h.split(":")[1].trim());
 	}
 
 	public void body(String input) {
@@ -131,22 +131,7 @@ public class RestPlugin {
 
 	// Search response JSON for value associated with the key
 	public String find(String key) {
-		String str = "";
-		List<String> strList = new ArrayList<String>();
-		try {
-			JsonPath path = JsonPath.compile(key);
-			if (output != null)
-				strList.add("" + path.read(output));
-			else
-				return "The response is empty";
-
-			str = ""
-					+ strList.toString().replaceAll("\\[", "")
-							.replaceAll("\\]", "");
-			return str;
-		} catch (Exception e) {
-			return "error : " + e.toString();
-		}
+		return find(key, output);
 	}
 
 	// To list all values under the key
@@ -156,10 +141,8 @@ public class RestPlugin {
 
 		try {
 			JsonPath path = JsonPath.compile(key);
-			if (output != null) {
+			if (output != null)
 				str = path.read(output);
-			}
-
 			else
 				return "The response is non existant or it is not in array form";
 
@@ -179,15 +162,15 @@ public class RestPlugin {
 	 * @param call
 	 *            - The API call GetResponse does the API call
 	 */
-	public void call(String call) {
+	public String call(String call) {
 		this.call = call;
 		header = "";
 		output = "";
-		DoCall();
+		return doCall();
 	}
 
 	// Do the actual call
-	private String DoCall() {
+	private String doCall() {
 		// If parameters are empty drop out
 		if (url == null)
 			return "No domain found";
@@ -201,16 +184,16 @@ public class RestPlugin {
 		try {
 			switch (this.method.toUpperCase()) {
 			case "GET":
-				GeneralCall(new GetMethod(request));
-				return output;
-			case "POST":
-				GeneralCall(new PostMethod(request));
+				generalCall(new GetMethod(request));
 				return output;
 			case "PUT":
-				GeneralCall(new PutMethod(request));
+				generalCall(new PutMethod(request));
+				return output;
+			case "POST":
+				generalCall(new PostMethod(request));
 				return output;
 			case "DELETE":
-				GeneralCall(new DeleteMethod(request));
+				generalCall(new DeleteMethod(request));
 				return output;
 			default:
 				return "No method found";
@@ -224,7 +207,7 @@ public class RestPlugin {
 	 * All the specific rest call functions. HTTPClient is not as generic as the
 	 * lower level HttpURLConnections
 	 */
-	private void GeneralCall(HttpMethod callMethod) throws HttpException,
+	private void generalCall(HttpMethod callMethod) throws Exception,
 			IOException {
 		// Create the client and a input for the call
 		HttpClient client = new HttpClient();
@@ -232,30 +215,31 @@ public class RestPlugin {
 				"application/json", "UTF-8");
 
 		// Add the header elements
-		for (int i = 0; i < headers.size(); i++) {
-			callMethod.addRequestHeader(headers.get(i).key,
-					headers.get(i).value);
+		Iterator<Entry<String, String>> it = config.data.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<String, String> tmp = it.next();
+			callMethod.addRequestHeader(tmp.getKey(), tmp.getValue());
 		}
 
+		header = "";
+
 		// Depending on the method make a call, don't save the cookie on
-		if (!this.method.toUpperCase().equals("GET")) {
-			callMethod.addRequestHeader("Cookie", config.get("Cookie"));
+		if (callMethod instanceof EntityEnclosingMethod) {
 			((EntityEnclosingMethod) callMethod)
 					.setRequestEntity(requestEntity);
 			code = client.executeMethod(callMethod);
-			config.replace("Cookie",
-					(cookie = client.getState().getCookies()[0].toString()));
+			getCookie(client);
 		} else {
-			callMethod.addRequestHeader("Cookie", config.get("Cookie"));
 			code = client.executeMethod(callMethod);
 		}
 
 		// Save all the header elements for the call
-		for (int i = 0; i < headers.size(); i++) {
-			header += callMethod.getRequestHeaders()[i].getName() + ":"
-					+ callMethod.getRequestHeaders()[i].getValue() + "\n";
+		it = config.data.entrySet().iterator();
+		while (it.hasNext()) {
+			header += it.next().toString() + "\n";
 		}
 
+		output = "";
 		// Save the output response
 		readResponse(callMethod);
 	}
@@ -271,5 +255,16 @@ public class RestPlugin {
 			output += line;
 		}
 		br.close();
+	}
+
+	private void getCookie(HttpClient client) {
+		Cookie[] cookies = client.getState().getCookies();
+		for (int i = 0; i < cookies.length; i++)
+			if (!cookies[i].toString().equals(cookie)) {
+				cookie = cookies[i].toString();
+				config.replace("Cookie", cookie);
+				return;
+			}
+		return;
 	}
 }
