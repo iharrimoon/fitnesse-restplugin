@@ -1,38 +1,37 @@
 package com.test.api;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class Config {
+
+public class Headers {
 	/**
-	 * An attempt to do a config page that will make the easy to configure test.
-	 * Mostly taken for REST Fixture
+	 * A Hashmap to help deal with header options
 	 */
-	public static final String DEFAULT_CONFIG_NAME = "default";
+	public static final String DEFAULT_HEADERS_NAME = "default";
 
-	private static final Map<String, Config> CONFIGURATIONS = new HashMap<String, Config>();
+	private static final Map<String, Headers> HEADERS = new HashMap<String, Headers>();
 
-	public static Config getConfig() {
-		return getConfig(DEFAULT_CONFIG_NAME);
+	public static Headers getHeaders() {
+		return getHeaders(DEFAULT_HEADERS_NAME);
 	}
 
-	public static Config getConfig(String name) {
+	public static Headers getHeaders(String name) {
 		if (name == null) {
-			name = DEFAULT_CONFIG_NAME;
+			name = DEFAULT_HEADERS_NAME;
 		}
-		Config namedConfig = CONFIGURATIONS.get(name);
-		if (namedConfig == null) {
-			namedConfig = new Config(name);
-			CONFIGURATIONS.put(name, namedConfig);
+		Headers namedHeaders = HEADERS.get(name);
+		if (namedHeaders == null) {
+			namedHeaders = new Headers(name);
+			HEADERS.put(name, namedHeaders);
 		}
-		return namedConfig;
+		return namedHeaders;
 	}
 
 	private final String name;
 
 	public Map<String, String> data;
 
-	private Config(final String name) {
+	private Headers(final String name) {
 		this.name = name;
 		this.data = new HashMap<String, String>();
 	}

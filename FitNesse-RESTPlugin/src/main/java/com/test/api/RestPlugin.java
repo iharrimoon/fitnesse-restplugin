@@ -11,7 +11,7 @@
 package com.test.api;
 
 import com.jayway.jsonpath.JsonPath;
-import com.test.api.Config;
+import com.test.api.Headers;
 
 import java.io.*;
 import java.util.*;
@@ -25,19 +25,19 @@ public class RestPlugin {
 	private String cookie, call, input = "";
 	private String method, output = "";
 	private String url, header = "";
-	private Config config;
+	private Headers headers;
 
 	/**
 	 * Constructors
 	 */
 	public RestPlugin() {
 		url = "";
-		config = Config.getConfig(Config.DEFAULT_CONFIG_NAME);
+		headers = Headers.getHeaders(Headers.DEFAULT_HEADERS_NAME);
 	}
 
 	public RestPlugin(String u) {
 		this.url = u;
-		config = Config.getConfig(Config.DEFAULT_CONFIG_NAME);
+		headers = Headers.getHeaders(Headers.DEFAULT_HEADERS_NAME);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class RestPlugin {
 	}
 
 	public void header(String h) {
-		config.add(h.split(":")[0].trim(), h.split(":")[1].trim());
+		headers.add(h.split(":")[0].trim(), h.split(":")[1].trim());
 	}
 
 	public void body(String input) {
@@ -215,13 +215,11 @@ public class RestPlugin {
 				"application/json", "UTF-8");
 
 		// Add the header elements
-		Iterator<Entry<String, String>> it = config.data.entrySet().iterator();
+		Iterator<Entry<String, String>> it = headers.data.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<String, String> tmp = it.next();
 			callMethod.addRequestHeader(tmp.getKey(), tmp.getValue());
 		}
-
-		header = "";
 
 		// Depending on the method make a call, don't save the cookie on
 		if (callMethod instanceof EntityEnclosingMethod) {
@@ -234,12 +232,11 @@ public class RestPlugin {
 		}
 
 		// Save all the header elements for the call
-		it = config.data.entrySet().iterator();
+		it = headers.data.entrySet().iterator();
 		while (it.hasNext()) {
 			header += it.next().toString() + "\n";
 		}
 
-		output = "";
 		// Save the output response
 		readResponse(callMethod);
 	}
@@ -249,12 +246,14 @@ public class RestPlugin {
 		InputStream rstream = callMethod.getResponseBodyAsStream();
 		BufferedReader br = new BufferedReader(new InputStreamReader(rstream,
 				"UTF-8"));
-		String line;
+		String line, tmp = "";
 
 		while ((line = br.readLine()) != null) {
-			output += line;
+			tmp += line;
 		}
 		br.close();
+		
+		output = tmp;
 	}
 
 	private void getCookie(HttpClient client) {
@@ -262,7 +261,7 @@ public class RestPlugin {
 		for (int i = 0; i < cookies.length; i++)
 			if (!cookies[i].toString().equals(cookie)) {
 				cookie = cookies[i].toString();
-				config.replace("Cookie", cookie);
+				headers.replace("Cookie", cookie);
 				return;
 			}
 		return;
