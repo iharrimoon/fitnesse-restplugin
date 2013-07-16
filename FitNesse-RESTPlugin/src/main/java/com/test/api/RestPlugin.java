@@ -14,6 +14,8 @@ import com.jayway.jsonpath.JsonPath;
 import com.test.api.Headers;
 
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.*;
 
@@ -154,6 +156,17 @@ public class RestPlugin {
 		} catch (Exception e) {
 			return "error : " + e.toString();
 		}
+	}
+	
+	public String date() {
+		DateFormat format = new SimpleDateFormat("yyyyMMDD");
+		Date date = new Date();
+		return format.format(date);
+	}
+	
+	public int randomTo(int min, int max) {
+		int r = min + (int)Math.random() * ((max - min) + 1);
+		return r;
 	}
 
 	/**
