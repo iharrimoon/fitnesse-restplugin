@@ -158,8 +158,8 @@ public class RestPlugin {
 		}
 	}
 	
-	public String date(String f) {
-		DateFormat format = new SimpleDateFormat(f);
+	public String date() {
+		DateFormat format = new SimpleDateFormat("yyyymmdd");
 		Date date = new Date();
 		return format.format(date);
 	}

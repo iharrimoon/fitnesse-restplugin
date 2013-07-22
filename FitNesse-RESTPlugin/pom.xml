@@ -33,7 +33,7 @@
 										<java classname="fitnesseMain.FitNesseMain" classpathref="maven.runtime.classpath"
 											fork="true">
 											<arg line="-p 9000" />
-											<arg line="-d /home/uxp/fitnesseroot" />
+											<arg line="-d ../../fitnesseroot" />
 										</java>
 									</tasks>
 								</configuration>
@@ -81,7 +81,7 @@
 											<arg value="-p" />
 											<arg value="9000" />
 											<arg value="-d" />
-											<arg value="/home/uxp/fitnesseroot" />
+											<arg value="../../fitnesseroot" />
 											<arg value="-c" />
 											<arg value="FrontPage.TestRoot.TestingSuite?suite&amp;format=text" />
 										</java>
@@ -131,7 +131,7 @@
 											<arg value="-p" />
 											<arg value="9000" />
 											<arg value="-d" />
-											<arg value="/home/uxp/fitnesseroot" />
+											<arg value="../../fitnesseroot" />
 											<arg value="-c" />
 											<arg value="FrontPage.TestRoot.TestingSuite?suite&amp;format=html" />
 										</java>
@@ -181,11 +181,11 @@
 											<arg value="-p" />
 											<arg value="9000" />
 											<arg value="-d" />
-											<arg value="/home/uxp/fitnesseroot" />
+											<arg value="../../fitnesseroot" />
 											<arg value="-c" />
 											<arg value="FrontPage.TestRoot.TestingSuite.MainTestSuite.ApiTestingSuite?suite&amp;format=text" />
 											<arg value="-l" />
-											<arg value="/home/uxp/files/results/" />
+											<arg value="../../files/results/" />
 										</java>
 									</tasks>
 								</configuration>
@@ -209,11 +209,11 @@
 	</profiles>
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
+      		<groupId>junit</groupId>
+      		<artifactId>junit</artifactId>
+      		<version>4.8.1</version>
+      		<scope>test</scope>
+    	</dependency>
 		<dependency>
 			<groupId>org.fitnesse</groupId>
 			<artifactId>fitlibrary</artifactId>

@@ -5,3 +5,4 @@ FitNesseRoot/**
 FitNesse-RESTPlugin/target/**
 FitNesse-RESTPlugin/bin/**
 FitNesse-RESTPlugin/?/**
+FitNesse-RESTPlugin/TestResults/

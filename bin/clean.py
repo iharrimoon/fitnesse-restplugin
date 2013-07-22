@@ -9,16 +9,14 @@ for line in sys.stdin:
   if "[java]" in line:
     line = line.replace("     [java] ", " ")
     line = line.strip()
-    if line[0] == ".":
+    if line[:1] == ".":
       line = line.replace(".", "TEST PASS - ", 1)
-    if line[0] == "F":
+    if line[:2] == "F ":
       line = line.replace("F", " 500 FAIL - ", 1)
-    if line[0] == "X":
+    if line[:1] == "X":
       line = line.replace("X", " 404 FAIL - ", 1)
-    line = line.repalace("FrontPage.TestRoot.TestingSuite.", "...", 1)
-    re.(r"R:\d+    ", "", line)
-    re.(r"E:\d+    ", "", line)
-    re.(r"I:\d+    ", "", line)
-      
-    
-sys.stdout.flush()
+    line = line.replace("FrontPage.TestRoot.TestingSuite.", "...", 1)
+    re.sub(r'R:\d+    ', '', line)
+    re.sub(r'E:\d+    ', '', line)
+    re.sub(r'I:\d+    ', '', line)
+    print line
