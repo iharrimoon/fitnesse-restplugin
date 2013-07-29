@@ -26,7 +26,7 @@
 						<executions>
 							<execution>
 								<id>start-fitnesse</id>
-								<phase>run</phase>
+								<phase>test</phase>
 								<configuration>
 									<tasks>
 										<echo taskname="fitnesse" message="Starting FitNesse..." />
@@ -53,6 +53,9 @@
 					<scope>runtime</scope>
 				</dependency>
 			</dependencies>
+			<properties>
+    			<maven.test.skip>true</maven.test.skip>
+  			</properties>
 		</profile>
 		<profile>
 			<id>complete</id>
@@ -72,7 +75,7 @@
 						<executions>
 							<execution>
 								<id>start-fitnesse</id>
-								<phase>run</phase>
+								<phase>test</phase>
 								<configuration>
 									<tasks>
 										<echo taskname="fitnesse" message="Starting FitNesse..." />
@@ -103,108 +106,9 @@
 					<scope>runtime</scope>
 				</dependency>
 			</dependencies>
-		</profile>
-		<profile>
-			<id>completehtml</id>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>2.3.2</version>
-						<configuration>
-							<source>1.7</source>
-							<target>1.7</target>
-						</configuration>
-					</plugin>
-					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.6</version>
-						<executions>
-							<execution>
-								<id>start-fitnesse</id>
-								<phase>run</phase>
-								<configuration>
-									<tasks>
-										<echo taskname="fitnesse" message="Starting FitNesse..." />
-										<java classname="fitnesseMain.FitNesseMain" classpathref="maven.runtime.classpath"
-											fork="true">
-											<arg value="-p" />
-											<arg value="9000" />
-											<arg value="-d" />
-											<arg value="../../fitnesseroot" />
-											<arg value="-c" />
-											<arg value="FrontPage.TestRoot.TestingSuite?suite&amp;format=html" />
-										</java>
-									</tasks>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-			<dependencies>
-				<dependency>
-					<groupId>org.fitnesse.plugins</groupId>
-					<artifactId>maven-classpath-plugin</artifactId>
-					<version>1.6</version>
-					<scope>runtime</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>api</id>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>2.3.2</version>
-						<configuration>
-							<source>1.7</source>
-							<target>1.7</target>
-						</configuration>
-					</plugin>
-					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.6</version>
-						<executions>
-							<execution>
-								<id>start-fitnesse</id>
-								<phase>run</phase>
-								<configuration>
-									<tasks>
-										<echo taskname="fitnesse" message="Starting FitNesse..." />
-										<java classname="fitnesseMain.FitNesseMain" classpathref="maven.runtime.classpath"
-											fork="true">
-											<arg value="-p" />
-											<arg value="9000" />
-											<arg value="-d" />
-											<arg value="../../fitnesseroot" />
-											<arg value="-c" />
-											<arg value="FrontPage.TestRoot.TestingSuite.MainTestSuite.ApiTestingSuite?suite&amp;format=text" />
-											<arg value="-l" />
-											<arg value="../../files/results/" />
-										</java>
-									</tasks>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-			<dependencies>
-				<dependency>
-					<groupId>org.fitnesse.plugins</groupId>
-					<artifactId>maven-classpath-plugin</artifactId>
-					<version>1.6</version>
-					<scope>runtime</scope>
-				</dependency>
-			</dependencies>
+			<properties>
+    			<maven.test.skip>true</maven.test.skip>
+  			</properties>
 		</profile>
 		<profile>
 			<id>run-suite</id>
