@@ -159,7 +159,7 @@ public class RestPlugin {
 	}
 	
 	public String date() {
-		DateFormat format = new SimpleDateFormat("yyyymmdd");
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		return format.format(date);
 	}
