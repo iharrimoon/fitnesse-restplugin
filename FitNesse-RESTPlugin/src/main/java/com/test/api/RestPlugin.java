@@ -188,49 +188,60 @@ public class RestPlugin {
 	 * @param call
 	 *            - The API call GetResponse does the API call
 	 */
-	public void call(String call) {
+	public String call(String call) {
 		this.call = call;
 		header = "";
 		output = "";
-		doCall();
+		return doCall();
 	}
 	
-	public void excute() {
+	public String execute() {
 		call = "";
 		header = "";
 		output = "";
-		doCall();
+		return doCall();
 	}
 
 	// Do the actual call
 	private String doCall() {
+		String debug = null;
 		// If parameters are empty drop out
-		if (url == null)
-			return "No domain found";
-		if (call == null)
-			return "No call found";
+		if (url == null) {
+			debug += "No domain found\n";
+			return debug;
+		}
+		if (call == null) {
+			debug += "No call found\n";
+			return debug;
+		}
 
 		// Set request
 		String request;
 		request = url + call;
+		debug += "Call URL - " + request + "\n";
 		
 		// Based on the method make a call
 		try {
 			switch (this.method.toUpperCase()) {
 			case "GET":
-				generalCall(new GetMethod(request));
-				return output;
+				debug += "GET METHOD\n";
+				debug += generalCall(new GetMethod(request));
+				return debug;
 			case "PUT":
-				generalCall(new PutMethod(request));
-				return output;
+				debug += "PUT METHOD\n";
+				debug += generalCall(new PutMethod(request));
+				return debug;
 			case "POST":
-				generalCall(new PostMethod(request));
-				return output;
+				debug += "POST METHOD\n";
+				debug += generalCall(new PostMethod(request));
+				return debug;
 			case "DELETE":
-				generalCall(new DeleteMethod(request));
-				return output;
+				debug += "DELETE METHOD\n";
+				debug += generalCall(new DeleteMethod(request));
+				return debug;
 			default:
-				return "No method found";
+				debug += "No method found\n";
+				return debug;
 			}
 		} catch (Exception e) {
 			return "error : " + e.toString();
@@ -241,8 +252,10 @@ public class RestPlugin {
 	 * All the specific rest call functions. HTTPClient is not as generic as the
 	 * lower level HttpURLConnections
 	 */
-	private void generalCall(HttpMethod callMethod) throws Exception,
+	private String generalCall(HttpMethod callMethod) throws Exception,
 			IOException {
+		String debug = null;
+		
 		// Create the client and a input for the call
 		HttpClient client = new HttpClient();
 		StringRequestEntity requestEntity = new StringRequestEntity(input,
@@ -253,6 +266,7 @@ public class RestPlugin {
 			NameValuePair[] qString = new NameValuePair[query.split("&").length];
 			for(int i = 0; i < query.split("&").length; i++) {
 				qString[i] = new NameValuePair(query.split("&")[i].split("=")[0], query.split("&")[i].split("=")[1]);
+				debug += "query > " + qString[i].toString() + "\n";
 			}
 			callMethod.setQueryString(qString);
 		}
@@ -273,15 +287,19 @@ public class RestPlugin {
 		} else {
 			code = client.executeMethod(callMethod);
 		}
+		
+		debug += "method used > " + callMethod.hasBeenUsed() + "\n";
 
 		// Save all the header elements for the call
 		it = headers.data.entrySet().iterator();
 		while (it.hasNext()) {
 			header += it.next().toString() + "\n";
 		}
-
+		
 		// Save the output response
 		readResponse(callMethod);
+		
+		return debug;
 	}
 
 	// Save the output response
