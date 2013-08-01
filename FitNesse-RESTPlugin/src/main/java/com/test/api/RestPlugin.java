@@ -63,7 +63,7 @@ public class RestPlugin {
 	
 	public void query(String query) {
 		this.query = query;
-		query.replace(" ", "%20");
+		this.query.replace(" ", "%20");
 	}
 	
 	public String request() {
@@ -206,10 +206,7 @@ public class RestPlugin {
 
 		// Set request
 		String request;
-		if(query == null)
-			request = url + call;
-		else 
-			request = url + call + "?" + query;
+		request = url + call;
 
 		// Based on the method make a call
 		try {
@@ -244,7 +241,11 @@ public class RestPlugin {
 		HttpClient client = new HttpClient();
 		StringRequestEntity requestEntity = new StringRequestEntity(input,
 				"application/json", "UTF-8");
-
+		
+		// Add a query string if needed
+		if(query != null)
+			callMethod.setQueryString(query);
+		
 		// Add the header elements
 		Iterator<Entry<String, String>> it = headers.data.entrySet().iterator();
 		while (it.hasNext()) {
