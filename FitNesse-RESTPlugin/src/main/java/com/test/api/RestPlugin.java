@@ -64,6 +64,15 @@ public class RestPlugin {
 	public void query(String query) {
 		this.query = query;
 	}
+	
+	public String request() {
+		String request;
+		if(query == null)
+			request = url + call;
+		else 
+			request = url + call + "?" + query;
+		return  request;
+	}
 
 	// Taking input from a file
 	public String readFile(String file) {
