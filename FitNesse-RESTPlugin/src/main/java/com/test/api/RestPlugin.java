@@ -63,7 +63,6 @@ public class RestPlugin {
 	
 	public void query(String query) {
 		this.query = query;
-		this.query.replace(" ", "%20");
 	}
 	
 	public String request() {
@@ -165,7 +164,6 @@ public class RestPlugin {
 			for (int i = 0; i < str.size(); i++) {
 				strList += "" + str.toArray()[i] + "\n";
 			}
-
 			return strList;
 		} catch (Exception e) {
 			return "error : " + e.toString();
@@ -178,6 +176,7 @@ public class RestPlugin {
 		return format.format(date);
 	}
 	
+	
 	public int randomTo(int min, int max) {
 		int r = min + (int)Math.random() * ((max - min) + 1);
 		return r;
@@ -189,11 +188,18 @@ public class RestPlugin {
 	 * @param call
 	 *            - The API call GetResponse does the API call
 	 */
-	public String call(String call) {
+	public void call(String call) {
 		this.call = call;
 		header = "";
 		output = "";
-		return doCall();
+		doCall();
+	}
+	
+	public void excute() {
+		call = "";
+		header = "";
+		output = "";
+		doCall();
 	}
 
 	// Do the actual call
@@ -207,7 +213,7 @@ public class RestPlugin {
 		// Set request
 		String request;
 		request = url + call;
-
+		
 		// Based on the method make a call
 		try {
 			switch (this.method.toUpperCase()) {
@@ -243,8 +249,13 @@ public class RestPlugin {
 				"application/json", "UTF-8");
 		
 		// Add a query string if needed
-		if(query != null)
-			callMethod.setQueryString(query);
+		if(query != null) {
+			NameValuePair[] qString = new NameValuePair[query.split("&").length];
+			for(int i = 0; i < query.split("&").length; i++) {
+				qString[i] = new NameValuePair(query.split("&")[i].split("=")[0], query.split("&")[i].split("=")[1]);
+			}
+			callMethod.setQueryString(qString);
+		}
 		
 		// Add the header elements
 		Iterator<Entry<String, String>> it = headers.data.entrySet().iterator();
