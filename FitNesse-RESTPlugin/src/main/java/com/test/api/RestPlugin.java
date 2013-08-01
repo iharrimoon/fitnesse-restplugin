@@ -63,6 +63,7 @@ public class RestPlugin {
 	
 	public void query(String query) {
 		this.query = query;
+		query.replace(" ", "%20");
 	}
 	
 	public String request() {
