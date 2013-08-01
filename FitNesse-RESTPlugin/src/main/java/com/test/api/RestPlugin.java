@@ -26,7 +26,7 @@ public class RestPlugin {
 	private int code;
 	private String cookie, call, input = "";
 	private String method, output = "";
-	private String url, header = "";
+	private String url, query, header = "";
 	private Headers headers;
 
 	/**
@@ -59,6 +59,10 @@ public class RestPlugin {
 
 	public void body(String input) {
 		this.input = input;
+	}
+	
+	public void query(String query) {
+		this.query = query;
 	}
 
 	// Taking input from a file
@@ -191,7 +195,11 @@ public class RestPlugin {
 			return "No call found";
 
 		// Set request
-		String request = url + call;
+		String request;
+		if(query == null)
+			request = url + call;
+		else 
+			request = url + call + "?" + query;
 
 		// Based on the method make a call
 		try {
