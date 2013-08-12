@@ -46,7 +46,7 @@ public class GitCmSystem {
 	}
 	
 	private static void getDir() throws Exception {
-		CommandRunner runner = new CommandRunner("locate -b FitNesseRoot", "");
+		CommandRunner runner = new CommandRunner("locate -b fitnesseroot", "");
 		runner.run();
 		wDir = runner.getOutput();
 	}

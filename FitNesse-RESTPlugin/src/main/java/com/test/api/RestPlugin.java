@@ -63,6 +63,7 @@ public class RestPlugin {
 	
 	public void query(String query) {
 		this.query = query;
+		query = query.replace(" ", "");
 	}
 	
 	public String request() {
