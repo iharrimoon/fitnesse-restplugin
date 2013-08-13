@@ -63,7 +63,10 @@ public class RestPlugin {
 	
 	public void query(String query) {
 		this.query = query;
-		query = query.replace(" ", "");
+		if(!this.query.contains("q=")) 
+			this.query = this.query.replaceAll("\\s", "");
+		else
+			this.query = this.query.replaceAll("\\s", "%20");
 	}
 	
 	public String request() {
