@@ -4,11 +4,11 @@ import fitnesse.components.CommandRunner;
 
 public class GitCmSystem {
 	static String path = "/usr/bin/git";
-	static String wDir = "";
+    static String wDir = "/Users/ssullivan/Git/fitnesseroot";
 
 	public static void cmUpdate(String file, String payload) throws Exception {
 		getPath();
-		getDir();
+		// getDir();
 		execute("cmUpdate", path + " --git-dir=" + wDir + "/.git --work-tree=" + wDir + " add " + file);
 		execute("cmUpdate", path + " --git-dir=" + wDir + "/.git --work-tree=" + wDir + " commit -m Updated-" + file);
 	}
@@ -18,7 +18,7 @@ public class GitCmSystem {
 
 	public static void cmDelete(String file, String payload) throws Exception {
 		getPath();
-		getDir();
+		// getDir();
 		execute("cmDelete", path + " --git-dir=" + wDir + "/.git --work-tree=" + wDir + " rm -rf --cached " + file);
 		execute("cmDelete", path + " --git-dir=" + wDir + "/.git --work-tree=" + wDir + "commit -m Updated-" + file);
 	}
@@ -47,10 +47,9 @@ public class GitCmSystem {
 	}
 	
 	private static void getDir() throws Exception {
-		CommandRunner runner = new CommandRunner("pwd", "");
+		CommandRunner runner = new CommandRunner("find . -name fitnesseroot", "");
 		runner.run();
 		wDir = runner.getOutput();
-        wDir = wDir.replaceAll("FitNesse-RESTPlugin","");
         wDir = wDir.trim();
 	}
 }

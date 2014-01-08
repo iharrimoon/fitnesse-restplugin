@@ -1,12 +1,11 @@
 package com.test.api;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import fitnesse.junit.FitNesseSuite;
 import fitnesse.junit.FitNesseSuite.FitnesseDir;
 import fitnesse.junit.FitNesseSuite.Name;
 import fitnesse.junit.FitNesseSuite.OutputDir;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 //DO NOT CHANGE THIS IS WHAT RUNS THE SUITE
 @RunWith(FitNesseSuite.class)
