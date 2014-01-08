@@ -9,8 +9,8 @@ public class GitCmSystem {
 	public static void cmUpdate(String file, String payload) throws Exception {
 		getPath();
 		getDir();
-		execute("cmUpdate",String.format("%s --git-dir=%s/.git --work-tree=%s add %s", path, wDir, wDir, file));
-		execute("cmUpdate",String.format("%s --git-dir=%s/.git --work-tree=%s commit -m Updated-%s", path, wDir, wDir, file));
+		execute("cmUpdate", path + " --git-dir=" + wDir + "/.git --work-tree=" + wDir + " add " + file);
+		execute("cmUpdate", path + " --git-dir=" + wDir + "/.git --work-tree=" + wDir + " commit -m Updated-" + file);
 	}
 
 	public static void cmEdit(String file, String payload) {
@@ -19,8 +19,8 @@ public class GitCmSystem {
 	public static void cmDelete(String file, String payload) throws Exception {
 		getPath();
 		getDir();
-		execute("cmDelete",String.format("%s --git-dir=%s/.git --work-tree=%s rm -rf --cached %s", path, wDir, wDir, file));
-		execute("cmDelete",String.format("%s --git-dir=%s/.git --work-tree=%s commit -m Updated-%s", path, wDir, wDir, file));
+		execute("cmDelete", path + " --git-dir=" + wDir + "/.git --work-tree=" + wDir + " rm -rf --cached " + file);
+		execute("cmDelete", path + " --git-dir=" + wDir + "/.git --work-tree=" + wDir + "commit -m Updated-" + file);
 	}
 
 	public static void cmPreDelete(String file, String payload)
@@ -43,11 +43,14 @@ public class GitCmSystem {
 		CommandRunner runner = new CommandRunner("which git", "");
 		runner.run();
 		path = runner.getOutput();
+        path = path.trim();
 	}
 	
 	private static void getDir() throws Exception {
-		CommandRunner runner = new CommandRunner("locate -b fitnesseroot", "");
+		CommandRunner runner = new CommandRunner("pwd", "");
 		runner.run();
 		wDir = runner.getOutput();
+        wDir = wDir.replaceAll("FitNesse-RESTPlugin","");
+        wDir = wDir.trim();
 	}
 }

@@ -226,24 +226,23 @@ public class RestPlugin {
 		
 		// Based on the method make a call
 		try {
-			switch (this.method.toUpperCase()) {
-			case "GET":
+			if(this.method.toUpperCase().equals("GET")) {
 				debug += "GET METHOD\n";
 				debug += generalCall(new GetMethod(request));
 				return debug;
-			case "PUT":
+            } else if(this.method.toUpperCase().equals("PUT")) {
 				debug += "PUT METHOD\n";
 				debug += generalCall(new PutMethod(request));
 				return debug;
-			case "POST":
+            } else if(this.method.toUpperCase().equals("POST")) {
 				debug += "POST METHOD\n";
 				debug += generalCall(new PostMethod(request));
 				return debug;
-			case "DELETE":
+            } else if(this.method.toUpperCase().equals("DELETE")) {
 				debug += "DELETE METHOD\n";
 				debug += generalCall(new DeleteMethod(request));
 				return debug;
-			default:
+            } else {
 				debug += "No method found\n";
 				return debug;
 			}
