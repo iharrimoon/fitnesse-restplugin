@@ -6,3 +6,6 @@ FitNesse-RESTPlugin/target/**
 FitNesse-RESTPlugin/bin/**
 FitNesse-RESTPlugin/?/**
 FitNesse-RESTPlugin/TestResults/
+FitNesse-RESTPlugin/.classpath
+FitNesse-RESTPlugin/.setting/**
+FitNesse-RESTPlugin/.idea/**
