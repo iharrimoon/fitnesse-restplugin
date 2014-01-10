@@ -2,10 +2,7 @@
 *.zip
 lib/**
 FitNesseRoot/**
-FitNesse-RESTPlugin/target/**
-FitNesse-RESTPlugin/bin/**
-FitNesse-RESTPlugin/?/**
-FitNesse-RESTPlugin/TestResults/
-FitNesse-RESTPlugin/.classpath
-FitNesse-RESTPlugin/.setting/**
-FitNesse-RESTPlugin/.idea/**
+target/**
+*.iml
+TestResults/**
+.idea/**
