@@ -1,33 +1,56 @@
 package com.test.api;
 
 import fitnesse.components.CommandRunner;
+import fitnesse.ComponentFactory;
+
+import java.io.FileInputStream;
 import java.net.InetAddress;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Properties;
 
 public class GitCmSystem {
-    static String MACHINE_NAME = null;
-    static String COMMIT_TOKEN = null;
-    static String path = "/usr/bin/git";
+    private static String MACHINE_NAME = null;
+    private static String COMMIT_TOKEN = null;
+    private static String path;
+    private static String gitdir;
+    private static String workdir;
+    private static boolean pullmode;
 
     public static void cmUpdate(String file, String payload) throws Exception {
+        // Config
+        config();
         getPath();
-        execute("cmUpdate", path + " add " + file);
-        execute("cmDelete", path + " commit -m Updated-" + freshToken() + "-" + file);
+        // Add the changes to Git
+        execute("cmUpdate", path + " --git-dir=" + gitdir + " --work-tree=" + workdir + " add " + file);
+        execute("cmDelete", path + " --git-dir=" + gitdir + " --work-tree=" + workdir + " commit -m Updated-" + freshToken().replaceAll(" ", "-") + "-" + file);
     }
 
-    public static void cmEdit(String file, String payload) {
+    // Commands for when the user hits the edit button
+    public static void cmEdit(String file, String payload) throws Exception {
+        // Config
+        config();
+        getPath();
+        // If it is in pull mode pull before every edit
+        if(pullmode) {
+            execute("cmEdit", path + " --git-dir=" + gitdir + " --work-tree=" + workdir + " pull --rebase");
+        }
     }
 
+    // Commands for when a page is deleted
     public static void cmDelete(String file, String payload) throws Exception {
+        // Configs
+        config();
         getPath();
-        execute("cmDelete", path + " rm -rf --cached " + file);
-        execute("cmDelete", path + " commit -m Removed-" + freshToken() + "-" + file);
+        // Remove the files for Git
+        execute("cmDelete", path + " --git-dir=" + gitdir + " --work-tree=" + workdir + " rm -rf --cached " + file);
+        execute("cmDelete", path + " --git-dir=" + gitdir + " --work-tree=" + workdir + " commit -m Removed-" + freshToken().replaceAll(" ", "-") + "]-" + file);
     }
 
     public static void cmPreDelete(String file, String payload) throws Exception {
     }
 
+    // Run bash command
     private static void execute(String method, String command) throws Exception {
         CommandRunner runner = new CommandRunner(command, "");
         runner.run();
@@ -51,7 +74,7 @@ public class GitCmSystem {
     }
 
     private static String freshToken() {
-        return DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date());
+        return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(new Date());
     }
 
     private static void getPath() throws Exception {
@@ -59,5 +82,30 @@ public class GitCmSystem {
         runner.run();
         path = runner.getOutput();
         path = path.trim();
+    }
+
+    private static void config() {
+        try {
+            // Read the plugins.properties
+            FileInputStream inputStream = new FileInputStream(ComponentFactory.PROPERTIES_FILE);
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            inputStream.close();
+
+            // Look for the git.path property
+            path = properties.getProperty("git.path");
+            if (path == null) {
+                path = "/usr/bin/git";
+            }
+
+            // Specify working directory
+            workdir = properties.getProperty("git.workdir");
+            gitdir =  workdir + "/.git";
+
+            pullmode = Boolean.getBoolean(properties.getProperty("git.pullmode"));
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

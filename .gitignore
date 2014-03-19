@@ -6,3 +6,4 @@ target/**
 *.iml
 TestResults/**
 .idea/**
+out/*
